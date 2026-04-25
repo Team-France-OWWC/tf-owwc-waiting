@@ -1,0 +1,81 @@
+name: 🇫🇷 Deploy — Page d'attente
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "CNAME"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Raison du déploiement manuel"
+        required: false
+        default: "Mise à jour manuelle"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: 🔨 Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ✅ Vérifier que index.html existe
+        run: |
+          if [ ! -f index.html ]; then
+            echo "❌ index.html introuvable à la racine du repo"
+            exit 1
+          fi
+          echo "✅ index.html trouvé ($(wc -c < index.html) octets)"
+
+      - name: 📄 Vérifier le CNAME
+        run: |
+          if [ ! -f CNAME ]; then
+            echo "⚠️  CNAME manquant — création automatique"
+            echo "avecle6.com" > CNAME
+          fi
+          echo "🌐 Domaine cible : $(cat CNAME)"
+
+      - name: ⚙️ Configurer GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: 📦 Uploader les artefacts Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+  deploy:
+    name: 🚀 Deploy → avecle6.com
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 🌍 Déployer sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: 📣 Résumé du déploiement
+        run: |
+          echo "## ✅ Déploiement réussi" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Info | Valeur |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌐 URL GitHub Pages | ${{ steps.deployment.outputs.page_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🏠 Domaine custom | https://avecle6.com |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📅 Date | $(date '+%d/%m/%Y %H:%M') UTC |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔖 Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 👤 Déclenché par | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
