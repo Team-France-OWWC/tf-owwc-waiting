@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "index.html"
-      - "CNAME"
       - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
     inputs:
@@ -15,11 +14,13 @@ on:
         required: false
         default: "Mise à jour manuelle"
 
+# Permissions requises par actions/deploy-pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Un seul déploiement à la fois, pas d'annulation en cours
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -40,14 +41,8 @@ jobs:
           fi
           echo "✅ index.html trouvé ($(wc -c < index.html) octets)"
 
-      - name: 📄 Vérifier le CNAME
-        run: |
-          if [ ! -f CNAME ]; then
-            echo "⚠️  CNAME manquant — création automatique"
-            echo "avecle6.com" > CNAME
-          fi
-          echo "🌐 Domaine cible : $(cat CNAME)"
-
+      # ⚠️ Pas de fichier CNAME nécessaire avec GitHub Actions comme source
+      # Le domaine custom est configuré dans Settings → Pages uniquement
       - name: ⚙️ Configurer GitHub Pages
         uses: actions/configure-pages@v4
 
@@ -63,6 +58,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: 🌍 Déployer sur GitHub Pages
         id: deployment
