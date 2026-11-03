@@ -81,16 +81,6 @@
 			pointer-events: none;
 		}
 
-		.halftone {
-			position: fixed;
-			inset: 0;
-			z-index: 3;
-			opacity: .06;
-			background-image: radial-gradient(circle, rgba(255, 255, 253, .8) 1px, transparent 1px);
-			background-size: 8px 8px;
-			pointer-events: none;
-		}
-
 		.scanlines {
 			position: fixed;
 			inset: 0;
@@ -608,7 +598,6 @@
 <!-- FOND -->
 <canvas id="particles" aria-hidden="true"></canvas>
 <div class="bg-glow" aria-hidden="true"></div>
-<div class="halftone" aria-hidden="true"></div>
 <div class="scanlines" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -763,7 +752,6 @@
 <footer class="footer">
 	<div class="footer-item">Équipe de France Overwatch</div>
 	<div class="footer-item">#AvecLe6</div>
-	<div class="footer-item">Allez les Bleus</div>
 </footer>
 
 <script>
