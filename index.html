@@ -350,13 +350,14 @@
 			background: var(--rouge);
 		}
 
-		/* ─── ROSTER : 6 / 6, MERCI ──────────────── */
+		/* ─── ROSTER OWWC 2026 ───────────────────── */
 		.roster {
-			margin-top: 1.9rem;
+			margin-top: 2.2rem;
+			width: min(820px, 100%);
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			gap: .75rem;
+			gap: 1rem;
 			opacity: 0;
 			animation: fadeUp 1s ease forwards 1.1s;
 		}
@@ -364,54 +365,122 @@
 		.roster-lbl {
 			font-family: 'Barlow Condensed', sans-serif;
 			font-weight: 600;
-			font-size: .62rem;
+			font-size: .68rem;
 			letter-spacing: .45em;
-			color: rgba(255, 255, 253, .66);
+			color: rgba(255, 255, 253, .72);
 			text-transform: uppercase;
 			text-align: center;
 		}
 
-		.slots {
-			display: flex;
+		.players {
+			list-style: none;
+			display: grid;
+			grid-template-columns: repeat(7, minmax(0, 1fr));
 			gap: .6rem;
-			align-items: center;
+			width: 100%;
 		}
 
-		.slot {
-			width: 38px;
-			height: 38px;
-			border: 1px solid rgba(255, 255, 253, .3);
-			background: rgba(11, 0, 228, .14);
-			display: flex;
-			align-items: center;
-			justify-content: center;
+		.player {
 			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 1px solid rgba(255, 255, 253, .16);
+			background: linear-gradient(180deg, rgba(11, 0, 228, .22) 0%, rgba(0, 4, 39, .85) 100%);
 			overflow: hidden;
+			transition: border-color .25s ease, transform .25s ease;
 		}
 
-		.slot::before {
+		.player:hover {
+			border-color: rgba(255, 255, 253, .45);
+			transform: translateY(-3px);
+		}
+
+		.player::after {
 			content: '';
 			position: absolute;
-			bottom: -2px;
 			left: 0;
 			right: 0;
-			height: 2px;
-			background: linear-gradient(90deg, transparent, rgba(241, 22, 22, .6), transparent);
-			animation: slotScan 2.4s ease-in-out infinite;
+			bottom: 0;
+			height: 3px;
+			background: var(--role-color);
 		}
 
-		.slot:nth-child(2)::before { animation-delay: .4s; }
-		.slot:nth-child(3)::before { animation-delay: .8s; }
-		.slot:nth-child(4)::before { animation-delay: 1.2s; }
-		.slot:nth-child(5)::before { animation-delay: 1.6s; }
-		.slot:nth-child(6)::before { animation-delay: 2s; }
+		.player[data-role="tank"] { --role-color: #4d6bff; }
+		.player[data-role="dps"] { --role-color: var(--rouge); }
+		.player[data-role="support"] { --role-color: var(--blanc); }
 
-		.slot-mark {
-			width: 8px;
-			height: 8px;
-			clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-			background: rgba(255, 255, 253, .9);
-			animation: rotateMark 8s linear infinite;
+		.player-photo {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 1 / 1.1;
+			background: radial-gradient(ellipse 70% 60% at 50% 70%, rgba(11, 0, 228, .45) 0%, transparent 70%);
+		}
+
+		.player-photo img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center 30%;
+		}
+
+		.player-photo .initial {
+			position: absolute;
+			inset: 0;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 2.4rem;
+			color: rgba(255, 255, 253, .35);
+		}
+
+		.player-photo.no-img .initial { display: flex; }
+
+		.player-name {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 1.15rem;
+			letter-spacing: .08em;
+			color: var(--blanc);
+			margin-top: .45rem;
+			line-height: 1;
+		}
+
+		.player-role {
+			font-family: 'Barlow Condensed', sans-serif;
+			font-weight: 600;
+			font-size: .55rem;
+			letter-spacing: .22em;
+			color: rgba(255, 255, 253, .7);
+			text-transform: uppercase;
+			margin: .3rem 0 .7rem;
+			text-align: center;
+			padding: 0 .2rem;
+		}
+
+		.staff {
+			list-style: none;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: .5rem 1.6rem;
+			margin-top: .2rem;
+		}
+
+		.staff li {
+			font-family: 'Barlow Condensed', sans-serif;
+			font-size: .72rem;
+			letter-spacing: .18em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 253, .62);
+		}
+
+		.staff strong {
+			font-weight: 700;
+			color: var(--blanc);
+			letter-spacing: .12em;
+			margin-right: .4rem;
 		}
 
 		/* ─── CTA ────────────────────────────────── */
@@ -491,8 +560,11 @@
 			.message br { display: none; }
 			.message { line-height: 1.6; }
 			.message .line { display: block; margin-bottom: .6rem; }
-			.slot { width: 34px; height: 34px; }
-			.slots { gap: .45rem; }
+			.players { display: flex; flex-wrap: wrap; justify-content: center; }
+			.player { width: calc((100% - 1.8rem) / 4); }
+			.roster-lbl { letter-spacing: .3em; }
+			.player-name { font-size: 1rem; }
+			.player-role { font-size: .5rem; letter-spacing: .15em; }
 		}
 
 		/* ─── KEYFRAMES ──────────────────────────── */
@@ -516,16 +588,7 @@
 			100% { left: 100%; }
 		}
 
-		@keyframes slotScan {
-			0% { bottom: -2px; opacity: 0; }
-			20% { opacity: 1; }
-			80% { opacity: 1; }
-			100% { bottom: calc(100% + 2px); opacity: 0; }
-		}
 
-		@keyframes rotateMark {
-			to { transform: rotate(360deg); }
-		}
 
 		@media (prefers-reduced-motion: reduce) {
 			*, *::before, *::after {
@@ -619,17 +682,72 @@
 		Hors saison · Retour à la prochaine World Cup
 	</div>
 
-	<div class="roster">
-		<div class="roster-lbl">Roster 2026 — Merci aux 6</div>
-		<div class="slots" aria-hidden="true">
-			<div class="slot"><div class="slot-mark"></div></div>
-			<div class="slot"><div class="slot-mark"></div></div>
-			<div class="slot"><div class="slot-mark"></div></div>
-			<div class="slot"><div class="slot-mark"></div></div>
-			<div class="slot"><div class="slot-mark"></div></div>
-			<div class="slot"><div class="slot-mark"></div></div>
-		</div>
-	</div>
+	<section class="roster" aria-labelledby="roster-title">
+		<h2 class="roster-lbl" id="roster-title">Roster OWWC 2026 — Merci à eux</h2>
+		<ul class="players">
+			<li class="player" data-role="tank">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/8e48bbe5-01ff-48e0-ac56-a8f21a293c83" alt="KroxZ" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">K</span>
+				</div>
+				<span class="player-name">KROXZ</span>
+				<span class="player-role">Tank</span>
+			</li>
+			<li class="player" data-role="tank">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/0321a3b2-a21d-4881-a4e2-7727ebb4eb2c" alt="Majin" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">M</span>
+				</div>
+				<span class="player-name">MAJIN</span>
+				<span class="player-role">Tank</span>
+			</li>
+			<li class="player" data-role="dps">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/67f57ed1-f090-4e16-b7ed-85f50b0b24af" alt="Kio" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">K</span>
+				</div>
+				<span class="player-name">KIO</span>
+				<span class="player-role">Hitscan</span>
+			</li>
+			<li class="player" data-role="dps">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/d2314b95-850e-47b1-8482-15c1d5065657" alt="Dip" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">D</span>
+				</div>
+				<span class="player-name">DIP</span>
+				<span class="player-role">Flex DPS</span>
+			</li>
+			<li class="player" data-role="support">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/be87926e-73a5-4b4b-9ea0-97fe1ca37bd7" alt="Xerion" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">X</span>
+				</div>
+				<span class="player-name">XERION</span>
+				<span class="player-role">Flex Support</span>
+			</li>
+			<li class="player" data-role="support">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/53602a4e-2454-4b5d-b364-bae79df429e8" alt="FDGod" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">F</span>
+				</div>
+				<span class="player-name">FDGOD</span>
+				<span class="player-role">Main Support</span>
+			</li>
+			<li class="player" data-role="support">
+				<div class="player-photo">
+					<img src="https://api.avecle6.com/api/media/14d7f080-a810-4c9b-ba59-5f87ac2ea9ec" alt="aes" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.remove()">
+					<span class="initial" aria-hidden="true">A</span>
+				</div>
+				<span class="player-name">AES</span>
+				<span class="player-role">Flex Support</span>
+			</li>
+		</ul>
+		<ul class="staff" aria-label="Staff">
+			<li><strong>Søeny</strong>General Manager</li>
+			<li><strong>LeRenegat</strong>Head Coach</li>
+			<li><strong>Peurle</strong>Social Lead</li>
+		</ul>
+	</section>
 
 	<a class="cta" href="https://x.com/avecle6" target="_blank" rel="noopener">
 		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
